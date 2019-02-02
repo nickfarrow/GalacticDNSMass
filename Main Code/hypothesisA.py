@@ -31,8 +31,6 @@ nMeasurements = len(massSamples)
 
 
 
-### Probability Distribution Functions
-# Single Gaussian Functions
 def evalSingleGaussian(theta, x):
     mu, sig = theta[0], theta[1]
     normalisingTerm = (0.5*(1+erf((2-mu)/(sig*2**0.5)) - (1+erf((0.8-mu)/(sig*2**0.5)))))
@@ -79,36 +77,19 @@ uniformModel = {
 ### Prior for each model.
 def prior(cube, ndim, nparams):
     # cube is initially a unit hypercube which is to be mapped onto the relevant prior space.
-
     
-    # Hyperparameter Index. We map the priors beginning with the parameters of model1,
-    # and then incriment j by the number of parameters in that model1. Then mapping
-    # the parameters of the next model2.
-    j = 0
-    
-    # Loop over both models.
-    for modelBeingMapped in [modelName1, modelName2]:
-        if modelBeingMapped == 'singleGaussian':
-            cube[j] = 0.8 + cube[j] * (2 - 0.8)
-            cube[j+1] = 0.005 + cube[j+1] * (0.5 - 0.005)
-            j += 2
-        if modelBeingMapped == 'twoGaussian':
-            cube[j] = 0.8 + cube[j] * (2 - 0.8)
-            cube[j+1] = cube[j] + cube[j+1] * (2 - cube[j])
-            cube[j+2] = 0.005 + cube[j+2] * (0.5 - 0.005)
-            cube[j+3] = 0.005 + cube[j+3] * (0.5 - 0.005)
-            cube[j+4] = cube[j+4] * 1
-            j += 5
-        if modelBeingMapped == 'uniform':
-            cube[j] = 0.8 + cube[j] * (2 - 0.8)
-            cube[j+1] = cube[j] + cube[j+1] * (2 - cube[j])
-            j += 2
-    
-    # After this process the number of parameters mapped, j, should be equal to the number of dimensions for the problem (hyperparameters of model1 + model2).
-    if j != ndim:
-        print("SOME PARAMETERS WERE NOT MAPPED TO!!!")
-        print(ndim)
-        print(j)
+    if modelName == 'singleGaussian':
+        cube[0] = 0.8 + cube[0] * (2 - 0.8)
+        cube[1] = 0.005 + cube[1] * (0.5 - 0.005)
+    if modelName == 'twoGaussian':
+        cube[0] = 0.8 + cube[0] * (2 - 0.8)
+        cube[1] = cube[0] + cube[1] * (2 - cube[0])
+        cube[2] = 0.005 + cube[2] * (0.5 - 0.005)
+        cube[3] = 0.005 + cube[3] * (0.5 - 0.005)
+        cube[4] = cube[4] * 1
+    if modelName == 'uniform':
+        cube[0] = 0.8 + cube[0] * (2 - 0.8)
+        cube[1] = cube[0] + cube[1] * (2 - cube[0])
     
     return
 
@@ -117,9 +98,8 @@ def prior(cube, ndim, nparams):
 ### Likelihood Function (Same as Farr et al.)
 def likelihood(cube, ndim, nparams):
     
-    # Create lists of the parameters for each model. Model1 has parameters in cube from 0 to ndim1-1, Model2 has parameters in cube from ndim1 to ndim-1.
-    paramList1 = [cube[i] for i in range(ndim1)]
-    paramList2 = [cube[i] for i in range(ndim1, ndim)]
+    # Create lists of the parameters for the model. 
+    paramList = [cube[i] for i in range(ndim)]
     
     # Initial list to contain the sum of the products of the probability for each m_r and m_s sample in their respective models.
     pdfProductSumList = []
@@ -128,8 +108,8 @@ def likelihood(cube, ndim, nparams):
     for massSample in massSamples:
         
         # Evaluate the PDF function down the m_r and m_s samples of the BNS
-        mrProbabilities = modelEval1(paramList1, massSample[:,0])
-        msProbabilities = modelEval2(paramList2, massSample[:,1])
+        mrProbabilities = modelEval(paramList, massSample[:,0])
+        msProbabilities = modelEval(paramList, massSample[:,1])
         
         # Evaluate the product of the m_r and m_s probability for each pair.
         probabilityProduct = mrProbabilities*msProbabilities
@@ -139,7 +119,7 @@ def likelihood(cube, ndim, nparams):
     
     # If either all the m_r or all the m_s samples are completely outside their model then return a log-likelihood of -inf.
     if 0 in pdfProductSumList:
-        print("Zero probability value - Parameters: {}, {}".format(paramList1,paramList2))
+        print("Zero probability value - Parameters: {}".format(paramList))
         return -np.inf
  
     # The log-likelihood is the log of the normalised sum over the log of each pdfProductSum
@@ -147,42 +127,26 @@ def likelihood(cube, ndim, nparams):
     return loglikelihood
 
 
-
 ### Models
 # This list contains the set of all model dictionary combinations
 # Model names, pdf functions, nDimensions, ParameterNames
-modelSet = [[singleGaussianModel, singleGaussianModel],
- [singleGaussianModel, twoGaussianModel],
- [singleGaussianModel, uniformModel],
- [twoGaussianModel, singleGaussianModel],
- [twoGaussianModel, twoGaussianModel],
- [twoGaussianModel, uniformModel],
- [uniformModel, singleGaussianModel],
- [uniformModel, twoGaussianModel],
- [uniformModel, uniformModel]]
+modelSet = [singleGaussianModel, twoGaussianModel, uniformModel]
 
 
 ### System input (models choice)
 # Takes the system argument given.
-# eg hypothesisA.py 2 will select the model pair with index 1, singleGuassian and twoGaussian.
+# eg hypothesisA.py 2 will select the model with index 1, twoGaussian.
 modelSetIndex = int(sys.argv[1]) - 1
 
 # Set relevant variables which are to be used in this sampling
-modelDictionary1, modelDictionary2 = modelSet[modelSetIndex]
-modelName1, modelEval1, ndim1, paramNames1 = modelDictionary1['name'], modelDictionary1['pdf'], modelDictionary1['ndim'], modelDictionary1['params']
-modelName2, modelEval2, ndim2, paramNames2 = modelDictionary2['name'], modelDictionary2['pdf'], modelDictionary2['ndim'], modelDictionary2['params']
-
-# Combined parameter list
-paramNames = paramNames1 + paramNames2
-
-# Define the total number of parameters
-ndim = ndim1 + ndim2
+modelDictionary = modelSet[modelSetIndex]
+modelName, modelEval, ndim, paramNames = modelDictionary['name'], modelDictionary['pdf'], modelDictionary['ndim'], modelDictionary['params']
 
 
 
 ### Inference
 # Directory to send output to. Create it if it does not exist.
-directoryName = topDirectory + 'hypA_out/' + modelName1[:4] + "/" + modelName2[:4]
+directoryName = topDirectory + 'hypA_out/' + modelName[:4]
 if not os.path.exists(directoryName):
     os.makedirs(directoryName)
 

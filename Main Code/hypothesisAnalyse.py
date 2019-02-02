@@ -15,7 +15,7 @@ import pymultinest
 
 
 
-modelSetA = [['singleGaussian', 'singleGaussian', 2, 2, ['mu', 'sigma', 'mu', 'sigma']],
+modelSetB = [['singleGaussian', 'singleGaussian', 2, 2, ['mu', 'sigma', 'mu', 'sigma']],
             ['singleGaussian', 'twoGaussian', 2, 5, ['mu', 'sigma', 'mu1', 'mu2', 'sigma1', 'sigma2', 'alpha']],
             ['singleGaussian', 'uniform', 2, 2, ['mu', 'sigma', 'mMin', 'mMax']],
             ['twoGaussian', 'singleGaussian', 5, 2, ['mu1', 'mu2', 'sigma1', 'sigma2', 'alpha', 'mu', 'sigma']],
@@ -26,7 +26,7 @@ modelSetA = [['singleGaussian', 'singleGaussian', 2, 2, ['mu', 'sigma', 'mu', 's
             ['uniform', 'uniform', 2, 2, ['mMin', 'mMax', 'mMin', 'mMax']]]
 
 
-modelSetB = [['singleGaussian', 2, ['mu', 'sigma']],
+modelSetA = [['singleGaussian', 2, ['mu', 'sigma']],
             ['twoGaussian', 5, ['mu1', 'mu2', 'sigma1', 'sigma2', 'alpha']],
             ['uniform', 2, ['mMin', 'mMax']]]
 
@@ -65,7 +65,7 @@ def fractionalEvidence(resultList, resultDirectory, saveName="fracResults.txt"):
             totalEv += result[-2]
         
         
-        ### Hypo A
+        ### Hypo B
         if len(resultList[0]) == 4:
             for result1 in resultList:
                 tb = ' & '
@@ -81,7 +81,7 @@ def fractionalEvidence(resultList, resultDirectory, saveName="fracResults.txt"):
 
 
 
-def makeTableA(resultList, resultDirectory, saveName="tableResults.txt"):
+def makeTableB(resultList, resultDirectory, saveName="tableResults.txt"):
     with open(resultDirectory + saveName,"w+") as z:
         
         reverseNameTitle = '    ' * 4 + ' & '.join([result[0][:4] + '-' + result[1][:4] for result in resultList[::-1]]) + "\\" * 2
@@ -105,7 +105,7 @@ def makeTableA(resultList, resultDirectory, saveName="tableResults.txt"):
 
 
 
-def makeTableB(resultList, resultDirectory, saveName="tableResults.txt"):
+def makeTableA(resultList, resultDirectory, saveName="tableResults.txt"):
     with open(resultDirectory + saveName,"w+") as z:
         
         reverseNameTitle = '    ' * 3 + ' & '.join([result[0][:4] for result in resultList[::-1]]) + "\\" * 2
@@ -131,11 +131,11 @@ def makeTableB(resultList, resultDirectory, saveName="tableResults.txt"):
     
     
 
-def analyseMainA(resultDirectory):
+def analyseMainB(resultDirectory):
     with open(resultDirectory + "collectedResults.txt","w+") as g:
         g.write("Model1 ------ Model2 ------ Evidence ------ LogEvidence std\n")
         resultsList = []
-        for modelName1, modelName2, ndim1, ndim2, paramNames in modelSetA:
+        for modelName1, modelName2, ndim1, ndim2, paramNames in modelSetB:
             ndim = ndim1 + ndim2
             print(modelName1, modelName2)
             
@@ -157,23 +157,23 @@ def analyseMainA(resultDirectory):
             evidenceSum += float(resultsList[i][2])
         g.write("Total evidence: {}".format(evidenceSum))
         
-        #makeTableA(resultsList, resultDirectory)
+        #makeTableB(resultsList, resultDirectory)
         
         
         sortedResults = sorted(resultsList, key = lambda x: x[2], reverse=True)
-        makeTableA(sortedResults, resultDirectory, "sortedResultsA.txt")
+        makeTableB(sortedResults, resultDirectory, "sortedResultsB.txt")
         
-        fractionalEvidence(sortedResults, resultDirectory, "fracResultsA.txt")
+        fractionalEvidence(sortedResults, resultDirectory, "fracResultsB.txt")
         
         
     return
 
-def analyseMainB(resultDirectory):
+def analyseMainA(resultDirectory):
     with open(resultDirectory + "collectedResults.txt","w+") as g:
         g.write("Model------ Evidence ------ LogEvidence std\n")
         
         resultsList = []
-        for modelName, ndim, paramNames in modelSetB:
+        for modelName, ndim, paramNames in modelSetA:
             print(modelName)
             
             prefix = resultDirectory + modelName[:4] + "/"
@@ -192,9 +192,9 @@ def analyseMainB(resultDirectory):
         g.write("Total evidence: {}".format(evidenceSum))
         
         sortedResults = sorted(resultsList, key = lambda x: x[1], reverse=True)
-        makeTableB(sortedResults, resultDirectory, "sortedResultsB.txt")
+        makeTableA(sortedResults, resultDirectory, "sortedResultsA.txt")
         
-        fractionalEvidence(sortedResults, resultDirectory, "fracResultsB.txt")
+        fractionalEvidence(sortedResults, resultDirectory, "fracResultsA.txt")
     return
 
 
@@ -212,16 +212,4 @@ else:
     else:
         print("Argument Error")
 
-
-# if len(sys.argv) >= 2:
-#     outputfileNameA = sys.argv[1]
-#     analyseMainA(outputfileNameA)
-    
-#     if len(sys.argv) == 3:
-#         outputfileNameB = sys.argv[2]
-#         analyseMainB(outputfileNameB)
-    
-# else:
-#     print("Use arguments: /directoryA/ (/directoryB/ optional)")
-
-        
+ 
