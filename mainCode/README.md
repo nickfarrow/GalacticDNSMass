@@ -44,6 +44,8 @@ The method of providing a number argument to the code allows for easy batch runn
 `python3 hypothesisB.py [1-9]`.
 
 ##  Basic analysis of output
+These scripts analyse the evidence for all of the 9 or 3 sub-hypotheses, and also aggregate a total evidence for each hypothesis A and B.
+
 `python3 hypothesisAnalyse.py A hypothesisA_out/`
 
 `python3 hypothesisAnalyse.py B hypothesisB_out/`
