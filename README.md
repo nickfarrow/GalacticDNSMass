@@ -19,4 +19,4 @@ We highly recommend reading `<arxiv link>` along with this demonstraion.
 A more detailed version of the code can be found here under [mainCode](/mainCode/).
 
 ## Citations
-Thank you [Buchner et al. 2014, A&A](http://www.aanda.org/articles/aa/abs/2014/04/aa22971-13/aa22971-13.html) for their python interface of MultiNest [F. Feroz, M.P. Hobson, M. Bridges. 2008](https://arxiv.org/abs/0809.3437)]
+Thank you [Buchner et al. 2014, A&A](http://www.aanda.org/articles/aa/abs/2014/04/aa22971-13/aa22971-13.html) for their python interface of MultiNest [F. Feroz, M.P. Hobson, M. Bridges. 2008](https://arxiv.org/abs/0809.3437)
