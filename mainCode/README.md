@@ -40,6 +40,7 @@ As sampling can take very long periods of time (12 combinations of sub-hypothese
 The method of providing a number argument to the code allows for easy batch running of the script.
 
 `python3 hypothesisA.py [1-3]`.
+
 `python3 hypothesisB.py [1-9]`.
 
 ##  Basic analysis of output
