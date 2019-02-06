@@ -1,5 +1,3 @@
-### NOTE THAT IN THIS CODE, HYPOTHESIS A REFERS TO WHAT IS KNOWN AS HYPOTHESIS B IN THE PAPER; AND VICE VERSA.
-
 ## Prerequisites
 Everthing should be already installed except for pymultinest. This is installed under the home directory (`cd ~`) the following commands:
 
@@ -32,9 +30,9 @@ Check if this worked by using `python3` then `import pymultinest`. If nothing sh
 This should be done first to check that all the required packages are installed (especially pymultinest).
 Sampling using a specific model (or model pairs) can be done through calling
 
-`python3 hypothesisA.py 3`
+`python3 hypothesisB.py 3`
 
-Which runs hypothesis A for the 3rd model pair (single - uniform).
+Which runs hypothesis B for the 3rd model pair (single - uniform).
 
 
 ## Running Jobs with Condor
