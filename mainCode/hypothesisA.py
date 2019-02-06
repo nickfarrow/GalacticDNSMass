@@ -151,7 +151,7 @@ if not os.path.exists(directoryName):
     os.makedirs(directoryName)
 
 # Run pymultinest sampling
-pymultinest.run(likelihood, prior, ndim, n_live_points=100, sampling_efficiency=0.3, importance_nested_sampling=False, outputfiles_basename=directoryName + '/', resume=False, verbose=True)
+pymultinest.run(likelihood, prior, ndim, n_live_points=1000, sampling_efficiency=0.3, importance_nested_sampling=False, outputfiles_basename=directoryName + '/', resume=False, verbose=True)
 
 print("Code took {} seconds to run.".format(datetime.now() - startTime))
 print("Exiting!")
