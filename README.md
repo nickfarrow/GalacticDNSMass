@@ -5,7 +5,7 @@ You can take a look at the [demo here](https://github.com/NicholasFarrow/Galacti
 
 `git clone https://github.com/NicholasFarrow/GalacticDNSMass`.
 
-We highly recommend reading `<arxiv link>` along with this demonstraion.
+We highly recommend reading [*The mass distribution of Galactic double neutron stars*; Nicholas Farrow, Xing-Jiang Zhu, Eric Thrane,](https://arxiv.org/abs/1902.03300) along with this demonstraion.
 
 ## Requirements 
 ### Without running inference (just demonstration & data analysis):
