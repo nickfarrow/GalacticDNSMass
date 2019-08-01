@@ -7,7 +7,7 @@ You can take a look at the [demo here](https://github.com/NicholasFarrow/Galacti
 
 `git clone https://github.com/NicholasFarrow/GalacticDNSMass`.
 
-[!binary mass pdfs](demoFiles/fig_pcSamples.png)
+![binary mass pdfs](demoFiles/fig_pcSamples.png)
 
 ## Requirements 
 ### Without running inference (just demonstration & data analysis):
